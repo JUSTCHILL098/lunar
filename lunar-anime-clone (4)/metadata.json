@@ -1,0 +1,5 @@
+{
+  "name": "Lunar Anime Clone",
+  "description": "A high-fidelity clone of lunaranime.ru featuring a custom animated navbar, bento grids, and a dark aesthetic using Tailwind CSS and Framer Motion.",
+  "requestFramePermissions": []
+}
