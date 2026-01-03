@@ -14,12 +14,12 @@ interface MeteorsProps {
 }
 
 export const Meteors = ({
-  number = 12,
-  angle = 215,
+  number = 90,          // 🔥 MORE PARTICLES
+  angle = 135,          // ↘️ LEFT-TOP → BOTTOM-RIGHT
   minDelay = 0,
   maxDelay = 2,
-  minDuration = 6,
-  maxDuration = 14,
+  minDuration = 8,
+  maxDuration = 18,
   className,
 }: MeteorsProps) => {
   const [meteors, setMeteors] = useState<React.CSSProperties[]>([]);
@@ -28,11 +28,12 @@ export const Meteors = ({
     if (typeof window === "undefined") return;
 
     const styles = Array.from({ length: number }).map(() => {
-      const size = Math.floor(Math.random() * 3) + 2; // 2–4px pixel snow
+      const size = Math.floor(Math.random() * 3) + 3; // ⬛ 3–5px squares
 
       return {
         "--angle": `${angle}deg`,
         left: Math.random() * window.innerWidth + "px",
+        top: Math.random() * -window.innerHeight + "px",
         width: `${size}px`,
         height: `${size}px`,
         animationDelay: `${
@@ -49,21 +50,19 @@ export const Meteors = ({
 
   return (
     <>
-      {/* INLINE STYLES – NO CSS FILE */}
+      {/* INLINE KEYFRAMES — NO CSS FILE */}
       <style jsx>{`
-        @keyframes meteor-snow {
+        @keyframes pixel-meteor-snow {
           from {
-            transform: translate3d(0, 0, 0)
-              rotate(var(--angle));
+            transform: translate3d(0, 0, 0) rotate(var(--angle));
             opacity: 0;
           }
           10% {
             opacity: 1;
           }
           to {
-            transform: translate3d(-140vw, 140vh, 0)
-              rotate(var(--angle));
-            opacity: 0.85;
+            transform: translate3d(160vw, 160vh, 0) rotate(var(--angle));
+            opacity: 0.9;
           }
         }
       `}</style>
@@ -78,11 +77,14 @@ export const Meteors = ({
           <span
             key={i}
             style={style}
-            className="absolute top-0 bg-white/70 shadow-[0_0_6px_rgba(255,255,255,0.25)] animate-[meteor-snow_linear_infinite]"
-          >
-            {/* Pixel trail (very subtle) */}
-            <span className="absolute left-full top-1/2 h-px w-6 -translate-y-1/2 bg-gradient-to-r from-white/40 to-transparent" />
-          </span>
+            className="
+              absolute
+              bg-white
+              opacity-80
+              shadow-[0_0_0_1px_rgba(255,255,255,0.25)]
+              animate-[pixel-meteor-snow_linear_infinite]
+            "
+          />
         ))}
       </div>
     </>
