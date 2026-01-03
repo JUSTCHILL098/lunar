@@ -1,53 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { cn } from "../../lib/utils";
+"use client";
 
-interface MeteorsProps {
-  number?: number;
-  minDelay?: number;
-  maxDelay?: number;
-  minDuration?: number;
-  maxDuration?: number;
-  angle?: number;
-  className?: string;
+
+import { useEffect, useState } from "react";
+
+
+export function Snow({ count = 40 }: { count?: number }) {
+const [flakes, setFlakes] = useState<any[]>([]);
+
+
+useEffect(() => {
+const items = Array.from({ length: count }).map(() => ({
+left: Math.random() * 100 + "%",
+size: Math.random() * 3 + 1,
+duration: Math.random() * 10 + 8,
+delay: Math.random() * -20,
+}));
+setFlakes(items);
+}, [count]);
+
+
+return (
+<div className="pointer-events-none fixed inset-0 z-0">
+{flakes.map((f, i) => (
+<span
+key={i}
+style={{
+left: f.left,
+width: f.size,
+height: f.size,
+animationDuration: f.duration + "s",
+animationDelay: f.delay + "s",
+}}
+className="absolute top-0 rounded-full bg-white/70 animate-snow"
+/>
+))}
+</div>
+);
 }
-
-export const Meteors = ({
-  number = 20,
-  minDelay = 0.2,
-  maxDelay = 1.2,
-  minDuration = 2,
-  maxDuration = 10,
-  angle = 215,
-  className,
-}: MeteorsProps) => {
-  const [meteorStyles, setMeteorStyles] = useState<Array<React.CSSProperties>>([]);
-
-  useEffect(() => {
-    const styles = [...Array(number)].map(() => ({
-      "--angle": angle + "deg",
-      top: -5,
-      left: Math.floor(Math.random() * (window.innerWidth - 0)) + "px",
-      animationDelay: Math.random() * (maxDelay - minDelay) + minDelay + "s",
-      animationDuration: Math.floor(Math.random() * (maxDuration - minDuration) + minDuration) + "s",
-    } as React.CSSProperties));
-    setMeteorStyles(styles);
-  }, [number, minDelay, maxDelay, minDuration, maxDuration, angle]);
-
-  return (
-    <>
-      {meteorStyles.map((style, idx) => (
-        <span
-          key={idx}
-          style={style}
-          className={cn(
-            "pointer-events-none absolute size-0.5 rotate-[var(--angle)] animate-meteor rounded-full bg-zinc-500 shadow-[0_0_0_1px_#ffffff10]",
-            className
-          )}
-        >
-          {/* Trail */}
-          <div className="pointer-events-none absolute top-1/2 -z-10 h-px w-[50px] -translate-y-1/2 bg-gradient-to-r from-zinc-500 to-transparent" />
-        </span>
-      ))}
-    </>
-  );
-};
