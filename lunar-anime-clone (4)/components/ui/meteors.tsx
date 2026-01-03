@@ -4,50 +4,48 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface MeteorsProps {
-  number?: number;
   className?: string;
 }
 
-export const Meteors = ({
-  number = 450, // ❄️ VERY DENSE
-  className,
-}: MeteorsProps) => {
+export const Meteors = ({ className }: MeteorsProps) => {
   const [pixels, setPixels] = useState<React.CSSProperties[]>([]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const SIZE = 10;       // ⬛ BIG SQUARES
+    const GAP = 14;        // spacing
+    const cols = Math.ceil(window.innerWidth / GAP) + 6;
+    const rows = Math.ceil(window.innerHeight / GAP) + 6;
 
-    const generated = Array.from({ length: number }).map(() => {
-      const size = Math.floor(Math.random() * 2) + 3; // ⬛ 3–4px
+    const generated: React.CSSProperties[] = [];
 
-      return {
-        left: Math.random() * width + "px",
-        top: Math.random() * height + "px",
-        width: size + "px",
-        height: size + "px",
-        animationDelay: `${Math.random() * -20}s`,
-        animationDuration: `${Math.random() * 10 + 12}s`,
-      } as React.CSSProperties;
-    });
+    for (let y = -5; y < rows; y++) {
+      for (let x = -5; x < cols; x++) {
+        generated.push({
+          left: `${x * GAP}px`,
+          top: `${y * GAP}px`,
+          width: `${SIZE}px`,
+          height: `${SIZE}px`,
+          animationDelay: `${Math.random() * -30}s`,
+          animationDuration: `${Math.random() * 6 + 10}s`,
+        });
+      }
+    }
 
     setPixels(generated);
-  }, [number]);
+  }, []);
 
   return (
     <>
-      {/* INLINE KEYFRAMES — NO CSS FILE */}
+      {/* INLINE KEYFRAMES — NO GLOBAL CSS */}
       <style jsx>{`
-        @keyframes pixel-snow {
+        @keyframes pixel-snow-diagonal {
           from {
             transform: translate3d(0, 0, 0);
-            opacity: 0.6;
           }
           to {
-            transform: translate3d(120px, 120vh, 0);
-            opacity: 1;
+            transform: translate3d(160px, 160vh, 0);
           }
         }
       `}</style>
@@ -65,8 +63,8 @@ export const Meteors = ({
             className="
               absolute
               bg-white
-              opacity-70
-              animate-[pixel-snow_linear_infinite]
+              opacity-80
+              animate-[pixel-snow-diagonal_linear_infinite]
             "
           />
         ))}
