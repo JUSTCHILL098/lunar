@@ -13,22 +13,30 @@ export const Meteors = ({ className }: MeteorsProps) => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const SIZE = 10;       // ⬛ BIG SQUARES
-    const GAP = 14;        // spacing
-    const cols = Math.ceil(window.innerWidth / GAP) + 6;
-    const rows = Math.ceil(window.innerHeight / GAP) + 6;
+    const SIZE = 4;        // 🟦 normal pixel size
+    const GAP = 22;        // 🌬️ less dense, breathable
+    const cols = Math.ceil(window.innerWidth / GAP) + 4;
+    const rows = Math.ceil(window.innerHeight / GAP) + 4;
+
+    const shades = [
+      "rgba(255,255,255,0.35)",
+      "rgba(220,220,220,0.3)",
+      "rgba(200,200,200,0.25)",
+      "rgba(180,180,180,0.2)",
+    ];
 
     const generated: React.CSSProperties[] = [];
 
-    for (let y = -5; y < rows; y++) {
-      for (let x = -5; x < cols; x++) {
+    for (let y = -4; y < rows; y++) {
+      for (let x = -4; x < cols; x++) {
         generated.push({
           left: `${x * GAP}px`,
           top: `${y * GAP}px`,
           width: `${SIZE}px`,
           height: `${SIZE}px`,
-          animationDelay: `${Math.random() * -30}s`,
-          animationDuration: `${Math.random() * 6 + 10}s`,
+          backgroundColor: shades[Math.floor(Math.random() * shades.length)],
+          animationDelay: `${Math.random() * -40}s`,
+          animationDuration: `${Math.random() * 20 + 30}s`, // 🐢 slow & smooth
         });
       }
     }
@@ -38,14 +46,19 @@ export const Meteors = ({ className }: MeteorsProps) => {
 
   return (
     <>
-      {/* INLINE KEYFRAMES — NO GLOBAL CSS */}
+      {/* Inline animation – NO CSS FILE */}
       <style jsx>{`
-        @keyframes pixel-snow-diagonal {
-          from {
+        @keyframes pixel-snow {
+          0% {
             transform: translate3d(0, 0, 0);
+            opacity: 0;
           }
-          to {
-            transform: translate3d(160px, 160vh, 0);
+          10% {
+            opacity: 1;
+          }
+          100% {
+            transform: translate3d(120px, 120vh, 0);
+            opacity: 0.15;
           }
         }
       `}</style>
@@ -62,9 +75,9 @@ export const Meteors = ({ className }: MeteorsProps) => {
             style={style}
             className="
               absolute
-              bg-white
-              opacity-80
-              animate-[pixel-snow-diagonal_linear_infinite]
+              rounded-[1px]
+              blur-[0.3px]
+              animate-[pixel-snow_linear_infinite]
             "
           />
         ))}
