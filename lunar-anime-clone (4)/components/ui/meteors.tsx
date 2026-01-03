@@ -5,84 +5,68 @@ import { cn } from "@/lib/utils";
 
 interface MeteorsProps {
   number?: number;
-  angle?: number;
-  minDelay?: number;
-  maxDelay?: number;
-  minDuration?: number;
-  maxDuration?: number;
   className?: string;
 }
 
 export const Meteors = ({
-  number = 90,          // 🔥 MORE PARTICLES
-  angle = 135,          // ↘️ LEFT-TOP → BOTTOM-RIGHT
-  minDelay = 0,
-  maxDelay = 2,
-  minDuration = 8,
-  maxDuration = 18,
+  number = 450, // ❄️ VERY DENSE
   className,
 }: MeteorsProps) => {
-  const [meteors, setMeteors] = useState<React.CSSProperties[]>([]);
+  const [pixels, setPixels] = useState<React.CSSProperties[]>([]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const styles = Array.from({ length: number }).map(() => {
-      const size = Math.floor(Math.random() * 3) + 3; // ⬛ 3–5px squares
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const generated = Array.from({ length: number }).map(() => {
+      const size = Math.floor(Math.random() * 2) + 3; // ⬛ 3–4px
 
       return {
-        "--angle": `${angle}deg`,
-        left: Math.random() * window.innerWidth + "px",
-        top: Math.random() * -window.innerHeight + "px",
-        width: `${size}px`,
-        height: `${size}px`,
-        animationDelay: `${
-          Math.random() * (maxDelay - minDelay) + minDelay
-        }s`,
-        animationDuration: `${
-          Math.random() * (maxDuration - minDuration) + minDuration
-        }s`,
+        left: Math.random() * width + "px",
+        top: Math.random() * height + "px",
+        width: size + "px",
+        height: size + "px",
+        animationDelay: `${Math.random() * -20}s`,
+        animationDuration: `${Math.random() * 10 + 12}s`,
       } as React.CSSProperties;
     });
 
-    setMeteors(styles);
-  }, [number, angle, minDelay, maxDelay, minDuration, maxDuration]);
+    setPixels(generated);
+  }, [number]);
 
   return (
     <>
       {/* INLINE KEYFRAMES — NO CSS FILE */}
       <style jsx>{`
-        @keyframes pixel-meteor-snow {
+        @keyframes pixel-snow {
           from {
-            transform: translate3d(0, 0, 0) rotate(var(--angle));
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
+            transform: translate3d(0, 0, 0);
+            opacity: 0.6;
           }
           to {
-            transform: translate3d(160vw, 160vh, 0) rotate(var(--angle));
-            opacity: 0.9;
+            transform: translate3d(120px, 120vh, 0);
+            opacity: 1;
           }
         }
       `}</style>
 
       <div
         className={cn(
-          "pointer-events-none absolute inset-0 overflow-hidden",
+          "pointer-events-none absolute inset-0 z-20 overflow-hidden",
           className
         )}
       >
-        {meteors.map((style, i) => (
+        {pixels.map((style, i) => (
           <span
             key={i}
             style={style}
             className="
               absolute
               bg-white
-              opacity-80
-              shadow-[0_0_0_1px_rgba(255,255,255,0.25)]
-              animate-[pixel-meteor-snow_linear_infinite]
+              opacity-70
+              animate-[pixel-snow_linear_infinite]
             "
           />
         ))}
