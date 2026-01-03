@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 
 
-export function Snow({ count = 40 }: { count?: number }) {
+export function meteors({ count = 40 }: { count?: number }) {
 const [flakes, setFlakes] = useState<any[]>([]);
 
 
